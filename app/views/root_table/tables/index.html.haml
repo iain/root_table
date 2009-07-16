@@ -1,4 +1,8 @@
-%ul
-  - @tables.each do |table|
-    %li= link_to table, root_table_table_manage_index_path(table)
+%h2= rt(:table_header)
 
+%ul.root_tables
+  - @tables.each do |table_name, tables|
+    %li{:id => table_name}
+      = link_to_manage_table(table_name, tables)
+      %br
+      = used_by(tables)

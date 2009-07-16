@@ -1,0 +1,5 @@
+en:
+  root_table:
+    table_header: Select a root table to manage
+    used_by: Used by {{tables}}
+    used_as: " (as {{field}})"
