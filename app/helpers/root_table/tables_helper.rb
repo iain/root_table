@@ -1,0 +1,2 @@
+module RootTable::TablesHelper
+end

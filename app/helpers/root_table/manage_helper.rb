@@ -1,0 +1,2 @@
+module RootTable::ManageHelper
+end

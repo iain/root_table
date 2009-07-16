@@ -1,0 +1,52 @@
+= Root Table
+
+Specifies so-called "root-tables" for inclusion with other models. Handy if
+you need to have a user manageable list in a dropdown.
+
+Integrates well with ActsAsList
+
+Has an interface to manage root tables.
+
+It's very early days for this plugin, so, unless you're feeling adventurous,
+don't use it just yet.
+
+== Installation
+
+Install root_table:
+
+  ./script/plugin install git://github.com/iain/root_table.git
+
+Install ActsAsList (optional):
+
+  ./script/plugin install git://github.com/rails/acts_as_list.git
+
+== Usage
+
+In short:
+
+* Create the model that has an item to be selected from a list. Add the foreign
+  key as if you were to define a normal belongs_to-relation.
+* Create a model which will be the list to choose from, include a name field
+  and optionally a position field, when working with ActsAsList.
+* Add to that model "root_table_for" and you're done.
+
+== Example
+
+We'll create products that can have a category to choose from.
+
+* Create the *target* model (Product):
+
+    ./script/generate model Product name:string description:text category_id:integer
+
+* Create the *root table* (Category):
+
+    ./script/generate model Category name:string position:integer
+
+* Migrate
+* Edit the category model:
+
+    class Category < ActiveRecord::Base
+      root_table_for :product
+    end
+
+

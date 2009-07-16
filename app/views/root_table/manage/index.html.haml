@@ -1,0 +1,17 @@
+%h2= "Manage " + model.human_name
+
+%table
+  %thead
+    - columns.each do |n|
+      %th= model.human_attribute_name(n)
+  %tbody
+    - @collection.each do |c|
+      %tr
+        - columns.each do |n|
+          %td&= c.send(n)
+        %td
+          = link_to "Edit", edit_root_table_table_manage_path(table, c.id)
+          |
+          = link_to "Destroy", root_table_table_manage_path(table, c.id), :method => :destroy, :confirm => "Are you sure?"
+
+%p= link_to "New", new_root_table_table_manage_path(table)

@@ -1,0 +1,4 @@
+%h2= "New " + model.human_name
+
+- form_for @object, :url => root_table_table_manage_index_path(table) do |f|
+  = render :partial => "form", :locals => { :f => f }
