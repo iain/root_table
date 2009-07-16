@@ -1,6 +1,6 @@
 class RootTable::ManageController < ApplicationController
 
-  layout 'categories'
+  before_filter :find_object_by_id
 
   def index
     @collection = model.all
@@ -10,10 +10,17 @@ class RootTable::ManageController < ApplicationController
     @object = model.new
   end
 
+  def sort
+    params[table.underscore].each_with_index do |id, index|
+      model.update_all(["#{root_table.order}=?", index+1], ['id=?', id])
+    end
+    render :nothing => true
+  end
+
   def create
-    @object = model.new(params[table])
+    @object = model.new(params[table.underscore])
     if @object.save
-      flash[:notice] = "#{model.human_name} saved"
+      flash[:notice] = I18n.t(:created, :table => model.human_name, :scope => :root_table)
       redirect_to root_table_table_manage_index_url(table)
     else
       render :new
@@ -21,20 +28,33 @@ class RootTable::ManageController < ApplicationController
   end
 
   def edit
-    @object = model.find(params[:id])
   end
 
   def update
-    @object = model.find(params[:id])
-    if @object.update_attributes(params[table])
-      flash[:notice] = "#{model.human_name} saved"
+    if @object.update_attributes(params[table.underscore])
+      flash[:notice] = I18n.t(:updated, :table => model.human_name, :scope => :root_table)
       redirect_to root_table_table_manage_index_url(table)
     else
       render :edit
     end
   end
 
-  protected
+  def destroy
+    @object.destroy
+    flash[:notice] = I18n.t(:destroyed, :table => model.human_name, :scope => :root_table)
+    redirect_to root_table_table_manage_index_url(table)
+  end
+
+  private
+
+  def find_object_by_id
+    @object = model.find(params[:id]) if params[:id]
+  end
+
+  def root_table
+    ::ActiveRecord::Base.root_tables[table].first
+  end
+  helper_method :root_table
 
   def table
     @table ||= params[:table_id]

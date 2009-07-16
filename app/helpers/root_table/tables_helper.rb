@@ -13,7 +13,7 @@ module RootTable::TablesHelper
   end
 
   def target_description(table)
-    used_as = table.options.has_key?(:field) ? rt(:used_as, :field => table.target.human_attribute_name(table.field.to_s)) : nil
+    used_as = table.options.has_key?(:to) ? rt(:used_as, :to => table.target.human_attribute_name(table.to.to_s)) : nil
     "%s%s" % [ table.target.human_name, used_as]
   end
 
