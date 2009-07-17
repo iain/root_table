@@ -5,20 +5,18 @@ you need to have a user manageable list in a dropdown.
 
 Integrates well with ActsAsList
 
-Has an interface to manage root tables.
+Has an Rails enging interface to manage all defined root tables.
 
-It's very early days for this plugin, so, unless you're feeling adventurous,
-don't use it just yet.
 
 == Installation
 
-Install root_table:
+* Install root_table:
 
-  ./script/plugin install git://github.com/iain/root_table.git
+    ./script/plugin install git://github.com/iain/root_table.git
 
-Install ActsAsList (optional):
+* Install ActsAsList (optional):
 
-  ./script/plugin install git://github.com/rails/acts_as_list.git
+    ./script/plugin install git://github.com/rails/acts_as_list.git
 
 == Usage
 
@@ -38,7 +36,7 @@ We'll create products that can have a category to choose from.
 
     ./script/generate model Product name:string description:text category_id:integer
 
-* Create the *root table* (Category):
+* Create the *root* table (Category):
 
     ./script/generate model Category name:string position:integer
 
@@ -49,4 +47,47 @@ We'll create products that can have a category to choose from.
       root_table_for :product
     end
 
+This has the following results:
 
+* The field name is now validated for presence and uniqueness
+* "Category has many products" and "Product belongs to category" relations are added
+* Product#category_name delegates to Category#name
+* Category acts as list
+* Default scope of category is :order => :position
+
+== Rails engine
+
+There is an interface for managing all you're root tables. Go to the url
+/root_tables/tables to see a list of all root tables defined. Clicking
+on one of these tables takes you to a scaffold like page where you can
+also drag and drop the list if you have installed it.
+
+Also it is fully internationalized. Check out locale.yml on how which keys
+are used.
+
+You can of course override these files to you're liking, by creating them
+in your app as well.
+
+== Configuration
+
+The definition takes a number of options, which are all optional:
+
+*  +field+ - Which field of the root table is the displayed value. The
+   default is :name.
+*  +to+ - How is the relation called? On the target model you would
+   normally say "belongs_to :foo, :foreign_key => "bar".
+   Specify what :foo would be, if different from the convention.
+*  +foreign_key+ - Just as you would specify the foreign_key in the
+   belongs_to relation, if different from the relation name.
+*  +order+ - Default order of the root table. Will be used for
+   acts_as_list, if installed. Without acts_as_list, this defaults
+   to :name (or whatever you set field to), with acts_as_list installed
+   it will default to :position.
+*  +validate+ - Set to false to disable automatic validations. Defaults
+   to validating presence and uniqueness of +field+
+*  +acts_as_list+ - Set to false if you have acts_as_list installed, but
+   don't want to use it in this case.
+
+
+---
+Copyright (c) 2009 Iain Hecker. Released under the MIT License.
