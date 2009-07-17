@@ -43,6 +43,13 @@ module RootTable
       ::ActiveRecord::Base.root_tables[root_table.source_name] << root_table 
     end
 
+    # Returns all root tables found (in the app/models directory).
+    # Used in the controller to build up a list for that.
+    def all_root_tables
+      Dir.glob(File.join(Rails.root, "app", "models", "**" "*.rb")).each { |f| require f }
+      ::ActiveRecord::Base.root_tables || {}
+    end
+
     class RootTable
 
       attr_reader :target_name, :options, :source
@@ -121,7 +128,6 @@ module RootTable
       def opt?(option)
         !options.has_key?(option) || !options[option]
       end
-
 
     end
 

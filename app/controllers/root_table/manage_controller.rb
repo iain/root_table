@@ -67,7 +67,10 @@ class RootTable::ManageController < ApplicationController
   helper_method :model
 
   def columns
-    @columns ||= model.column_names - %w[ id updated_at created_at ]
+    return @columns if @columns
+    @columns = model.column_names - %w[ id updated_at created_at ]
+    @columns -= [ root_table.order.to_s ] if root_table.acts_as_list?
+    @columns
   end
   helper_method :columns
 
