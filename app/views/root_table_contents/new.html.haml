@@ -1,4 +1,4 @@
 %h2= rt(:new_header, :table => model.human_name)
 
-- form_for @object, :url => root_table_table_manage_index_path(table) do |f|
+- form_for @object, :url => root_table_root_table_contents_path(table) do |f|
   = render :partial => "form", :locals => { :f => f }

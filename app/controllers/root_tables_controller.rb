@@ -1,4 +1,4 @@
-class RootTable::TablesController < ApplicationController
+class RootTablesController < ApplicationController
 
   def index
     @tables = ActiveRecord::Base.all_root_tables
