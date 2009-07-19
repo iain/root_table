@@ -1,10 +1,5 @@
 %h2= t(".header", :table => model.human_name(:count => @collection.size))
 
-- if root_table.acts_as_list?
-  %style
-    :sass
-      .handle
-        :cursor move
 
 %ul{:id => table.underscore}
   - @collection.each do |object|
@@ -18,6 +13,12 @@
 
 - if root_table.acts_as_list?
   = sortable_element table.underscore, :url => sort_root_table_root_table_contents_path, :handle => "handle"
+  - content_for(:head) do
+    = javascript_include_tag "prototype", "effects", "dragdrop", :cache => "root_table"
+  %style{:type => "text/css", :media => "screen"}
+    :sass
+      .handle
+        :cursor move
 
 %h3= t(".actions")
 
