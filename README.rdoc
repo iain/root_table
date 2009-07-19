@@ -73,7 +73,7 @@ And display it, through it's delegated method:
 == Rails engine
 
 There is an interface for managing all you're root tables. Go to the url
-+/root_tables+ to see a list of all root tables defined. Clicking
+localhost:3000/root_tables to see a list of all root tables defined. Clicking
 on one of these tables takes you to a scaffold like page where you can
 also drag and drop the list if you have installed it.
 
@@ -84,7 +84,7 @@ You can of course override these files to you're liking, by creating them
 in your app as well.
 
 Any view is overridable per table as well. To have a different form for new
-categories, for example, define +app/views/root_tables/new_category.html.erb+
+categories, for example, define app/views/root_tables/new_category.html.erb
 and fill it up. Do have a look at the original code for inspiration.
 
 == Configuration
