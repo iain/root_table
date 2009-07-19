@@ -3,7 +3,7 @@
 Specifies so-called "root-tables" for inclusion with other models. Handy if
 you need to have a user manageable list in a dropdown.
 
-Integrates well with ActsAsList
+Integrates well with +acts_as_list+.
 
 Has an Rails enging interface to manage all defined root tables.
 
@@ -14,7 +14,7 @@ Has an Rails enging interface to manage all defined root tables.
 
     ./script/plugin install git://github.com/iain/root_table.git
 
-* Install ActsAsList (optional):
+* Install acts_as_list (optional):
 
     ./script/plugin install git://github.com/rails/acts_as_list.git
 
@@ -26,7 +26,8 @@ In short:
   key as if you were to define a normal belongs_to-relation.
 * Create a model which will be the list to choose from, include a name field
   and optionally a position field, when working with ActsAsList.
-* Add to that model "root_table_for" and you're done.
+* Add to that model "root_table_for".
+* Use "f.root_table_select" in you're forms.
 
 == Example
 
@@ -34,7 +35,7 @@ We'll create products that can have a category to choose from.
 
 * Create the *target* model (Product):
 
-    ./script/generate model Product name:string description:text category_id:integer
+    ./script/generate model Product name:string category_id:integer
 
 * Create the *root* table (Category):
 
@@ -55,10 +56,24 @@ This has the following results:
 * Category acts as list
 * Default scope of category is :order => :position
 
+Now, let's create that drop down in your product form:
+
+  <% form_for @product do |f| %>
+    <p>
+      <%= f.label :category_id %><br />
+      <%= f.root_table_select :category, :include_blank => true %>
+    </p>
+  <% end %>
+
+And display it, through it's delegated method:
+
+  <%= @product.categegory_name %>
+
+
 == Rails engine
 
 There is an interface for managing all you're root tables. Go to the url
-/root_tables/tables to see a list of all root tables defined. Clicking
++/root_tables+ to see a list of all root tables defined. Clicking
 on one of these tables takes you to a scaffold like page where you can
 also drag and drop the list if you have installed it.
 
@@ -67,6 +82,10 @@ are used.
 
 You can of course override these files to you're liking, by creating them
 in your app as well.
+
+Any view is overridable per table as well. To have a different form for new
+categories, for example, define +app/views/root_tables/new_category.html.erb+
+and fill it up. Do have a look at the original code for inspiration.
 
 == Configuration
 
@@ -88,6 +107,8 @@ The definition takes a number of options, which are all optional:
 *  +acts_as_list+ - Set to false if you have acts_as_list installed, but
    don't want to use it in this case.
 
+
+Visit http://iain.nl/ for more information.
 
 ---
 Copyright (c) 2009 Iain Hecker. Released under the MIT License.
