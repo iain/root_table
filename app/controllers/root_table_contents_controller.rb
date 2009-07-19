@@ -5,11 +5,12 @@ class RootTableContentsController < ApplicationController
 
   def index
     @collection = model.all
+    render_per_table
   end
 
   def new
     @object = model.new
-    render_per_table :new
+    render_per_table
   end
 
   def create
@@ -23,7 +24,7 @@ class RootTableContentsController < ApplicationController
   end
 
   def edit
-    render_per_table :edit
+    render_per_table
   end
 
   def update

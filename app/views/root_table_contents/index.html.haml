@@ -1,6 +1,5 @@
 %h2= t(".header", :table => model.human_name(:count => @collection.size))
 
-
 %ul{:id => table.underscore}
   - @collection.each do |object|
     %li[object]

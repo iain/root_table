@@ -165,7 +165,8 @@ module RootTable
       I18n.t(key, :table => model.human_name, :scope => [self.controller_name, :flash])
     end
 
-    def render_per_table(action)
+    def render_per_table(action = nil)
+      action ||= self.action_name
       begin
         render :action => "#{action}_#{table}"
       rescue ActionView::MissingTemplate
