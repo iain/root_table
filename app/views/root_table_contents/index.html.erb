@@ -13,11 +13,11 @@
       </small>
     <% end %>
   <% end %>
-<% end %>
+</ul>
 
-<%- if root_table.acts_as_list? -%>
+<% if root_table.acts_as_list? %>
   <%= sortable_element table.underscore, :url => sort_root_table_root_table_contents_path, :handle => "handle" %>
-  <%- content_for(:head) do -%>
+  <% content_for(:head) do %>
     <%= javascript_include_tag "prototype", "effects", "dragdrop", :cache => "root_table" %>
   <% end %>
   <style type="text/css" media="screen">.handle { cursor: move; }</style>

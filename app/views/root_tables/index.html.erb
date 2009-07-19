@@ -1,8 +1,10 @@
-%h2= t(".header")
+<h2><%= t(".header") %></h2>
 
-%ul.root_tables
-  - @tables.each do |table_name, tables|
-    %li{:id => table_name}
-      = link_to_manage_table(table_name, tables)
-      %br
-      %small= used_by(tables)
+<ul class="root_tables">
+  <% @tables.each do |table_name, tables| %>
+    <li id="<%= table_name %>">
+      <%= link_to_manage_table(table_name, tables) %><br />
+      <small><%= used_by(tables) %></small>
+    </li>
+  <% end %>
+</ul>
