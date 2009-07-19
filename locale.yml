@@ -1,19 +1,30 @@
 en:
-  root_table:
-    table_header: "Select a root table to manage"
-    used_by: "Used by {{tables}}"
-    used_as: " (as '{{to}}')"
+  root_tables:
+    index:
+      header: "Select a root table to manage"
+      used_by: "Used by {{tables}}"
+      used_as: " (as '{{to}}')"
 
-    manage_header: "Manage {{table}}"
-    new_header: "New {{table}}"
-    edit_header: "Edit {{table}}"
-    handle: "[DRAG]"
-    created: "Successfully created {{table}}"
-    updated: "Successfully updated {{table}}"
-    destroyed: "Successfully deleted {{table}}"
-    new: "New {{table}}"
-    edit: "Edit"
-    delete: "Delete"
-    back: "Back"
-    actions: "Actions"
-    confirm: "Are you sure you want to delete this?"
+  root_table_contents:
+    index:
+      header: "Manage {{table}}"
+      handle: "[DRAG]"
+      back: "Back"
+      actions: "Actions"
+      edit: "Edit"
+      delete: "Delete"
+      new: "New {{table}}"
+      confirm: "Are you sure you want to delete this?"
+
+    new:
+      header: "New {{table}}"
+      submit: "Create"
+
+    edit:
+      header: "Edit {{table}}"
+      submit: "Update"
+
+    flash:
+      created: "Successfully created {{table}}"
+      updated: "Successfully updated {{table}}"
+      destroyed: "Successfully deleted {{table}}"

@@ -1,4 +1,10 @@
-%h2= rt(:new_header, :table => model.human_name)
+%h2= t(".header", :table => model.human_name)
 
 - form_for @object, :url => root_table_root_table_contents_path(table) do |f|
-  = render :partial => "form", :locals => { :f => f }
+  = f.error_messages
+  %p
+    = f.label root_table.field
+    %br
+    = f.text_field root_table.field
+
+  %p= submit_tag t(".submit")

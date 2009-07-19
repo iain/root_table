@@ -1,4 +1,4 @@
-%h2= rt :manage_header, :table => model.human_name(:count => @collection.size)
+%h2= t(".header", :table => model.human_name(:count => @collection.size))
 
 - if root_table.acts_as_list?
   %style
@@ -10,7 +10,7 @@
   - @collection.each do |object|
     %li[object]
       - if root_table.acts_as_list?
-        %small.handle= rt(:handle)
+        %small.handle= t(".handle")
       %strong&= object.send(root_table.field)
       %small.actions
         = link_to_edit_root_table_item(table, object.id)
@@ -19,8 +19,8 @@
 - if root_table.acts_as_list?
   = sortable_element table.underscore, :url => sort_root_table_root_table_contents_path, :handle => "handle"
 
-%h3= rt(:actions)
+%h3= t(".actions")
 
 %ul.actions
-  %li= link_to rt(:new, :table => model.human_name), new_root_table_root_table_content_path(table)
-  %li= link_to rt(:back), root_tables_path
+  %li= link_to t(".new", :table => model.human_name), new_root_table_root_table_content_path(table)
+  %li= link_to t(".back"), root_tables_path

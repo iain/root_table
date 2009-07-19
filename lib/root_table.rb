@@ -136,6 +136,7 @@ module RootTable
   module ActionController
 
     def self.included(controller)
+      controller.before_filter :find_object_by_id
       controller.helper_method :root_table
       controller.helper_method :table
       controller.helper_method :model
@@ -149,26 +150,27 @@ module RootTable
     end
 
     def root_table
-      ::ActiveRecord::Base.root_tables[table].first
+      @root_table ||= ::ActiveRecord::Base.all_root_tables[table.camelize].first
     end
 
     def table
-      @table ||= params[:table_id]
+      @table ||= params[:root_table_id]
     end
 
     def model
-      @model ||= table.to_s.camelize.constantize
-    end
-
-    def columns
-      return @columns if @columns
-      @columns = model.column_names - %w[ id updated_at created_at ]
-      @columns -= [ root_table.order.to_s ] if root_table.acts_as_list?
-      @columns
+      @model ||= table.camelize.constantize
     end
 
     def flash_message(key)
-      I18n.t(key, :table => model.human_name, :scope => :root_table)
+      I18n.t(key, :table => model.human_name, :scope => [self.controller_name, :flash])
+    end
+
+    def render_per_table(action)
+      begin
+        render :action => "#{action}_#{table}"
+      rescue ActionView::MissingTemplate
+        render :action => action
+      end
     end
 
   end
