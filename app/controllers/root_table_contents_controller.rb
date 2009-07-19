@@ -43,11 +43,8 @@ class RootTableContentsController < ApplicationController
   end
 
   def sort
-    params[table].each_with_index do |id, index|
-      model.update_all(["#{root_table.order}=?", index+1], ['id=?', id])
-    end
+    update_sorting
     render :nothing => true
   end
-
 
 end

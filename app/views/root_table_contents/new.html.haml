@@ -1,6 +1,7 @@
 %h2= t(".header", :table => model.human_name)
 
 - form_for @object, :url => root_table_root_table_contents_path(table) do |f|
+
   = f.error_messages
   %p
     = f.label root_table.field

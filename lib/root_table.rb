@@ -174,6 +174,21 @@ module RootTable
       end
     end
 
+    def update_sorting
+      params[table].each_with_index do |id, index|
+        model.update_all(["#{root_table.order}=?", index+1], ['id=?', id])
+      end
+    end
+
+  end
+
+  module FormBuilder
+
+    def root_table_select(model, options = {})
+      root_table = ::ActiveRecord::Base.all_root_tables[model.to_s.camelize].first
+      collection_select(root_table.foreign_key, root_table.source.all, :id, root_table.field, options)
+    end
+
   end
 
 end
