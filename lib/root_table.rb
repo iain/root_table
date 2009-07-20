@@ -40,13 +40,21 @@ module RootTable
       root_table = RootTable.new(self, target_name, options)
       ::ActiveRecord::Base.root_tables ||= {}
       ::ActiveRecord::Base.root_tables[root_table.source_name] ||= []
-      ::ActiveRecord::Base.root_tables[root_table.source_name] << root_table 
+      ::ActiveRecord::Base.root_tables[root_table.source_name] << root_table
+      root_table.initialize_for_source
+    end
+
+    def has_root_table(source_name)
+      model = source_name.to_s.camelize.constantize
+      root_table = ::ActiveRecord::Base.root_tables[model.name].select { |rt| rt.target == self }.first
+      root_table.initialize_for_target
     end
 
     # Returns all root tables found (in the app/models directory).
     # Used in the controller to build up a list for that.
+    # Just generate a constant, so Rails will take care of the depency loading.
     def all_root_tables
-      Dir.glob(File.join(Rails.root, "app", "models", "**" "*.rb")).each { |f| require f }
+      Dir.glob(File.join(Rails.root, "app", "models", "**" "*.rb")).each { |f| File.basename(f, ".rb").camelize.constantize }
       ::ActiveRecord::Base.root_tables || {}
     end
 
@@ -58,19 +66,17 @@ module RootTable
         @source       = source
         @target_name  = target_name
         @options      = options
+      end
 
+      def initialize_for_source
         add_order
         add_validations if add_validations?
         add_relations
       end
 
-      def order
-        return @order if @order
-        if acts_as_list?
-          @order = options[:order] || :position
-        else
-          @order = options[:order] || field
-        end
+      def initialize_for_target
+        target.belongs_to(to, :class_name => source_name, :foreign_key => foreign_key)
+        target.delegate(field, :to => to, :prefix => true, :allow_nil => true)
       end
 
       def add_order
@@ -86,8 +92,15 @@ module RootTable
 
       def add_relations
         source.has_many(target_plural, :foreign_key => foreign_key)
-        target.belongs_to(to, :class_name => source_name, :foreign_key => foreign_key)
-        target.delegate(field, :to => to, :prefix => true, :allow_nil => true)
+      end
+
+      def order
+        return @order if @order
+        if acts_as_list?
+          @order = options[:order] || :position
+        else
+          @order = options[:order] || field
+        end
       end
 
       def source_name
@@ -140,7 +153,6 @@ module RootTable
       controller.helper_method :root_table
       controller.helper_method :table
       controller.helper_method :model
-      controller.helper_method :columns
     end
 
     private

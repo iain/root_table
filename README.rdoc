@@ -7,6 +7,8 @@ Integrates well with +acts_as_list+.
 
 Has an Rails enging interface to manage all defined root tables.
 
+See also the blogpost about the release: http://iain.nl/2009/07/root-table/
+
 
 == Installation
 
@@ -26,7 +28,8 @@ In short:
   key as if you were to define a normal belongs_to-relation.
 * Create a model which will be the list to choose from, include a name field
   and optionally a position field, when working with ActsAsList.
-* Add to that model "root_table_for".
+* Add to that model +root_table_for+.
+* Add to the receiving model +has_root_table+.
 * Use "f.root_table_select" in you're forms.
 
 == Example
@@ -46,6 +49,12 @@ We'll create products that can have a category to choose from.
 
     class Category < ActiveRecord::Base
       root_table_for :product
+    end
+
+* Edit the product model:
+
+    class Product < ActiveRecord::Base
+      has_root_table :category
     end
 
 This has the following results:
