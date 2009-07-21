@@ -75,8 +75,9 @@ module RootTable
       end
 
       def initialize_for_target
-        target.belongs_to(to, :class_name => source_name, :foreign_key => foreign_key)
+        target.belongs_to(to.to_sym, :class_name => source_name, :foreign_key => foreign_key)
         target.delegate(field, :to => to, :prefix => true, :allow_nil => true)
+        #raise "foo #{to.inspect} #{source_name}"
       end
 
       def add_order
