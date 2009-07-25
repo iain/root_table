@@ -1,4 +1,5 @@
 class RootTableContentsController < ApplicationController
+  unloadable
 
   # This is where the magic happens:
   include RootTable::ActionController
