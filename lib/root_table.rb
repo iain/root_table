@@ -145,7 +145,7 @@ module RootTable
       end
 
       def opt?(option)
-        !options.has_key?(option) || !options[option]
+        !options.has_key?(option) || options[option]
       end
 
     end
