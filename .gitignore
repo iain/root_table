@@ -1,2 +1,5 @@
 .DS_Store
 app/controllers/application_controller.rb
+.svn
+**/.svn
+**/**/.svn
