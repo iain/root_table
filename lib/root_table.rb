@@ -38,15 +38,15 @@ module RootTable
     #   don't want to use it in this case.
     def root_table_for(target_name, options = {})
       root_table = RootTable.new(self, target_name, options)
-      ::ActiveRecord::Base.root_tables ||= {}
-      ::ActiveRecord::Base.root_tables[root_table.source_name] ||= []
-      ::ActiveRecord::Base.root_tables[root_table.source_name] << root_table
+      self.root_tables ||= {}
+      self.root_tables[root_table.source_name] ||= []
+      self.root_tables[root_table.source_name] << root_table
       root_table.initialize_for_source
     end
 
     def has_root_table(source_name)
       model = source_name.to_s.camelize.constantize
-      root_table = ::ActiveRecord::Base.root_tables[model.name].select { |rt| rt.target == self }.first
+      root_table = model.root_tables[model.name].select { |rt| rt.target == self }.first
       root_table.initialize_for_target
     end
 
@@ -54,8 +54,14 @@ module RootTable
     # Used in the controller to build up a list for that.
     # Just generate a constant, so Rails will take care of the depency loading.
     def all_root_tables
-      Dir.glob(File.join(Rails.root, "app", "models", "**" "*.rb")).each { |f| File.basename(f, ".rb").camelize.constantize }
-      ::ActiveRecord::Base.root_tables || {}
+      found_root_tables = {}
+      Dir.glob(File.join(Rails.root, "app", "models", "**" "*.rb")).each do |f|
+        model = File.basename(f, ".rb").camelize.constantize
+        if model.respond_to?(:root_tables) && !model.root_tables.nil?
+          found_root_tables.update(model.root_tables)
+        end
+      end
+      found_root_tables
     end
 
     class RootTable
@@ -77,7 +83,6 @@ module RootTable
       def initialize_for_target
         target.belongs_to(to.to_sym, :class_name => source_name, :foreign_key => foreign_key)
         target.delegate(field, :to => to, :prefix => true, :allow_nil => true)
-        #raise "foo #{to.inspect} #{source_name}"
       end
 
       def add_order
@@ -197,9 +202,14 @@ module RootTable
 
   module FormBuilder
 
-    def root_table_select(model, options = {})
-      root_table = ::ActiveRecord::Base.all_root_tables[model.to_s.camelize].first
-      collection_select(root_table.foreign_key, root_table.source.all, :id, root_table.field, options)
+    def root_table_select(model_name, options = {})
+      model = model_name.to_s.camelize.constantize
+      root_table = model.root_tables[model_name.to_s.camelize].first
+      if root_table.class == ::RootTable::ActiveRecord::RootTable
+        collection_select(root_table.foreign_key.to_sym, root_table.source.all, :id, root_table.field, options)
+      else
+        raise "RootTable #{model} not defined.\n#{root_table.inspect}"
+      end
     end
 
   end
